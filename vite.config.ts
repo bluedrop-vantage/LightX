@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+// Minimal type shim so vite.config.ts can read env vars without pulling in
+// @types/node just for one field. The workflow sets VITE_BASE='/LightX/'.
+declare const process: { env: Record<string, string | undefined> };
+
 /**
  * `base` can be overridden at build time via VITE_BASE (defaults to '/' for
  * local dev + self-hosting; the GitHub Pages workflow sets it to '/LightX/').

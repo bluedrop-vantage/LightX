@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas3D } from '../../render/Canvas3D';
 import { createSceneController } from '../../render/SceneController';
 import { FieldBrush, type BrushMode } from './FieldBrush';
+import { rackToSamples, samplesEvaluate, samplesGradientZ } from './rackField';
 import { VerdictCard } from '../VerdictCard';
 import { EquationsPanel } from '../../ui/EquationsPanel';
 import { SealBreakBadge } from '../../ui/SealBreakBadge';
@@ -48,10 +49,14 @@ export function ExperimentCanvas() {
   const shipVelRef = useRef<[number, number]>([...SHIP_INITIAL_VEL]);
   const trailRef = useRef<number[]>([]);
 
+  const rackSamples = useMemo(() => rackToSamples(storePlacements), [storePlacements]);
+  const rackSamplesRef = useRef(rackSamples);
+  rackSamplesRef.current = rackSamples;
+
   const { emitFrom, clear: clearRays, rayCount } = useGeodesicTracer({
     metricKind: 'paintedField',
     getMetricParams: () => ({
-      samples: brush.serialize(),
+      samples: [...brush.serialize(), ...rackSamplesRef.current],
       forceScale: FIELD_FORCE_SCALE,
     }),
     scene: controller,
@@ -62,7 +67,11 @@ export function ExperimentCanvas() {
   });
 
   useEffect(() => {
-    controller.setEvaluator((x, y) => brush.evaluate(x, y));
+    controller.setEvaluator((x, y) => {
+      const b = brush.evaluate(x, y);
+      const r = samplesEvaluate(rackSamplesRef.current, x, y);
+      return { z: b.z + r.z, expansion: b.expansion + r.expansion };
+    });
     controller.setBubbleIndicator(false, 0, [0, 0]);
     controller.setShipPosition(SHIP_INITIAL_POS[0], SHIP_INITIAL_POS[1], 0.5);
   }, [controller, brush]);
@@ -96,9 +105,10 @@ export function ExperimentCanvas() {
       last = t;
       const [px, py] = shipPosRef.current;
       const [vx, vy] = shipVelRef.current;
-      const { gx, gy } = brush.gradientZ(px, py);
-      const ax = -gx * FIELD_FORCE_SCALE;
-      const ay = -gy * FIELD_FORCE_SCALE;
+      const gBrush = brush.gradientZ(px, py);
+      const gRack = samplesGradientZ(rackSamplesRef.current, px, py);
+      const ax = -(gBrush.gx + gRack.gx) * FIELD_FORCE_SCALE;
+      const ay = -(gBrush.gy + gRack.gy) * FIELD_FORCE_SCALE;
       const nvx = vx + ax * dt;
       const nvy = vy + ay * dt;
       const npx = px + nvx * dt;
@@ -168,22 +178,22 @@ export function ExperimentCanvas() {
   const numericsCompute = useCallback(() => {
     const totalPos = brush.totalPositive();
     const totalNeg = brush.totalNegative();
-    const negFromRack = storePlacements.reduce(
-      (s, p) => s + (getIngredient(p.ingredient).energyDensity === 'negative' ? p.amount : 0),
+    const rackAttractive = storePlacements.reduce(
+      (s, p) => s + (getIngredient(p.ingredient).gravity === 'attractive' ? p.amount : 0),
       0,
     );
-    const posFromRack = storePlacements.reduce(
-      (s, p) => s + (getIngredient(p.ingredient).energyDensity === 'positive' ? p.amount : 0),
+    const rackRepulsive = storePlacements.reduce(
+      (s, p) => s + (getIngredient(p.ingredient).gravity === 'repulsive' ? p.amount : 0),
       0,
     );
     return [
-      { label: 'Σρ⁺  (positive paint)', value: totalPos, format: (v: number) => v.toExponential(2) },
-      { label: 'Σρ⁻  (negative paint)', value: -totalNeg, format: (v: number) => v.toExponential(2) },
-      { label: 'rack ρ⁺ (dropped)', value: posFromRack, format: (v: number) => v.toFixed(2) },
-      { label: 'rack ρ⁻ (dropped)', value: negFromRack, format: (v: number) => v.toFixed(2) },
-      { label: 'net ρ', value: totalPos - totalNeg + posFromRack - negFromRack, format: (v: number) => v.toExponential(2) },
+      { label: 'Σρ⁺  (paint attractive)', value: totalPos, format: (v: number) => v.toExponential(2) },
+      { label: 'Σρ⁻  (paint repulsive)', value: -totalNeg, format: (v: number) => v.toExponential(2) },
+      { label: 'rack attractive (ordinary / anti / dark matter)', value: rackAttractive, format: (v: number) => v.toFixed(2) },
+      { label: 'rack repulsive (negative energy / Casimir)', value: rackRepulsive, format: (v: number) => v.toFixed(2) },
+      { label: 'rack items placed', value: rackSamples.length, format: (v: number) => v.toFixed(0) },
     ];
-  }, [brush, storePlacements]);
+  }, [brush, storePlacements, rackSamples]);
 
   const clearAll = useCallback(() => {
     brush.clear();
@@ -291,8 +301,11 @@ export function ExperimentCanvas() {
         <Slot
           slot="field"
           label="Energy source rack"
-          hint="Drop any pantry ingredient here — contributes directly to the verdict alongside anything you paint."
-          accept={(id) => getIngredient(id).energyDensity !== 'none' || getIngredient(id).topological}
+          hint="Drop shapeable pantry ingredients (matter, antimatter, dark matter, exotic energy) here — each becomes a visible bump / well on the mesh and drives ships + rays through the combined field."
+          accept={(id) => {
+            const def = getIngredient(id);
+            return def.shapeable || def.topological;
+          }}
         />
         <RecipeShortcuts kind="custom" />
         <FordRomanMeter ratio={ratio} label="Ford–Roman ratio (rack ρ⁻ + paint ρ⁻)" />
