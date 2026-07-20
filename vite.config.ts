@@ -1,7 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+/**
+ * `base` can be overridden at build time via VITE_BASE (defaults to '/' for
+ * local dev + self-hosting; the GitHub Pages workflow sets it to '/LightX/').
+ */
 export default defineConfig({
+  base: process.env.VITE_BASE ?? '/',
   plugins: [react()],
   worker: {
     format: 'es',
