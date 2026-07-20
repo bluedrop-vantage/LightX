@@ -97,33 +97,58 @@ const HYPERSPACE_RECIPES: Recipe[] = [
 
 const FREEBUILD_RECIPES: Recipe[] = [
   {
-    label: 'Negative energy field',
-    note: 'Single negative-energy ingredient — try painting some too and firing rays.',
-    outcome: 'yellow',
-    placements: [{ ingredient: 'negativeEnergy', amount: 1, slot: 'field' }],
-  },
-  {
-    label: 'Positive-mass well',
-    note: 'A stack of ordinary matter — expect gravitational lensing when you fire rays.',
+    label: 'Ordinary matter well',
+    note: 'A single ordinary-matter blob creates a gravity well. Switch to Trace and click nearby — rays lens toward it (gravitational lensing).',
     outcome: 'real',
-    placements: [
-      { ingredient: 'ordinary', amount: 1, slot: 'field' },
-      { ingredient: 'darkMatter', amount: 1, slot: 'field' },
-    ],
+    placements: [{ ingredient: 'ordinary', amount: 1, slot: 'field' }],
   },
   {
-    label: 'Antimatter check',
-    note: 'ALPHA-g 2023: antimatter falls DOWN. Verify by painting and launching the ship.',
+    label: 'Antimatter falls down (ALPHA-g)',
+    note: 'ALPHA-g 2023 measured antihydrogen freefall directly. Launch the ship — it falls toward the antimatter, same as ordinary matter.',
     outcome: 'real',
     placements: [{ ingredient: 'antimatter', amount: 1, slot: 'field' }],
   },
   {
-    label: 'Mixed exotic + matter',
-    note: 'Sum of both energy densities — the verdict weighs both.',
-    outcome: 'red',
+    label: 'Dark matter halo',
+    note: 'Two dark-matter blobs mimic an extended halo. Rays lens as if invisible mass is present — this is how astronomers infer dark matter.',
+    outcome: 'real',
     placements: [
-      { ingredient: 'negativeEnergy', amount: 1, slot: 'field' },
+      { ingredient: 'darkMatter', amount: 1, slot: 'field' },
+      { ingredient: 'darkMatter', amount: 1, slot: 'field' },
+    ],
+  },
+  {
+    label: 'Matter + antimatter (both attract)',
+    note: 'Same-sign gravity for both (ALPHA-g). Two attractive wells; the ship falls into whichever is closer.',
+    outcome: 'real',
+    placements: [
       { ingredient: 'ordinary', amount: 1, slot: 'field' },
+      { ingredient: 'antimatter', amount: 1, slot: 'field' },
+    ],
+  },
+  {
+    label: 'Negative-energy repulsor',
+    note: 'A repulsive bump — the ship deflects around it and rays defocus. Bulk deployment needs the QI seal (see the Ford–Roman meter).',
+    outcome: 'yellow',
+    placements: [{ ingredient: 'negativeEnergy', amount: 1, slot: 'field' }],
+  },
+  {
+    label: 'Matter vs negative energy',
+    note: 'Attractive well and a repulsive bump side-by-side. Ship trajectory + ray fans show the sign difference clearly.',
+    outcome: 'yellow',
+    placements: [
+      { ingredient: 'ordinary', amount: 1, slot: 'field' },
+      { ingredient: 'negativeEnergy', amount: 1, slot: 'field' },
+    ],
+  },
+  {
+    label: 'Cluster of matter (multi-body)',
+    note: 'Ordinary + dark + anti = three attractive wells around origin. Great for demonstrating chaotic geodesics.',
+    outcome: 'real',
+    placements: [
+      { ingredient: 'ordinary', amount: 1, slot: 'field' },
+      { ingredient: 'darkMatter', amount: 1, slot: 'field' },
+      { ingredient: 'antimatter', amount: 1, slot: 'field' },
     ],
   },
 ];

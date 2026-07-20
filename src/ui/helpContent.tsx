@@ -68,10 +68,10 @@ export const HELP_ENTRIES: Record<string, HelpEntry> = {
     body: (
       <>
         <p>
-          Two ways to compose a custom rig. Drop pantry ingredients into the <em>Energy source rack</em> for discrete contributions, and/or paint continuous energy density onto the canvas with the brushes. The verdict combines both.
+          Two ways to compose a custom rig. Drop pantry ingredients into the <em>Energy source rack</em> — each contributing item auto-places as a Gaussian source on the canvas (attractive well for ordinary / anti / dark matter; repulsive bump for negative energy / Casimir). Or paint continuous energy density with the brushes. The verdict sums both, and so do the ray tracer and the ship-launch integrator.
         </p>
         <p>
-          Fire rays (<em>Trace</em>) or launch the ship into the field to test how light and a timelike observer behave in your painted potential. Positive-mass paint focuses rays, negative-energy paint defocuses them.
+          Try the recipe shortcuts to see each ingredient's real-physics behavior — ALPHA-g's antimatter freefall, dark-matter lensing halos, negative-energy defocusing, and matter+exotic mixed potentials. Dark energy stays rejected here because it's unmanipulable (a property of space, not a substance).
         </p>
       </>
     ),
