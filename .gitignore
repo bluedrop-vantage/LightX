@@ -1,0 +1,39 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+dist-ssr
+dist-types
+.vite
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Test outputs
+coverage
+.nyc_output
+playwright-report
+test-results
+blob-report
+playwright/.cache
+
+# Local + secret files
+*.local
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+Thumbs.db
+
+# Claude Code local state (not part of source)
+.claude

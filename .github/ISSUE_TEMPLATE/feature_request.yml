@@ -1,0 +1,46 @@
+name: Feature request
+description: Propose a new construct, ingredient, mission, tutor, or visualization.
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Physics-honest features preferred. If you're proposing a physical claim, cite the paper.
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: What problem does this solve?
+      placeholder: Users can't currently see …
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+
+  - type: textarea
+    id: physics
+    attributes:
+      label: Physics grounding (if applicable)
+      description: Which theorem / paper / experiment supports this?
+      placeholder: Alcubierre 1994 · Ford–Roman 1995 · ALPHA-g 2023 · …
+    validations:
+      required: false
+
+  - type: dropdown
+    id: content-integrity
+    attributes:
+      label: Content-integrity impact
+      description: Does this change how verdicts / seals / theorems are computed or displayed?
+      options:
+        - "No — purely UI/UX"
+        - "Adds a new seal or verdict path"
+        - "Changes existing physics behavior"
+        - "Not sure"
+    validations:
+      required: true

@@ -1,0 +1,59 @@
+name: Bug report
+description: Something in LightX doesn't behave as it should.
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug! Please include enough info to reproduce it.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, and what went wrong?
+      placeholder: I opened the Warp tab, dropped Negative Energy, and…
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: What should have happened instead?
+    validations:
+      required: true
+
+  - type: input
+    id: which-tab
+    attributes:
+      label: Which tab or component?
+      placeholder: Warp · Wormhole · Krasnikov · Hyperspace · Free Build · Community
+    validations:
+      required: false
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the Wormhole tab
+        2. …
+    validations:
+      required: false
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser + OS
+      placeholder: Chrome 120 on macOS 14
+    validations:
+      required: false
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors (if any)
+      description: Paste anything red from DevTools console.
+      render: shell
