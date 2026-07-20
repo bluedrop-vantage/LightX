@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Read the product spec
-    url: https://github.com/ajayrambhia/LightX/blob/main/exotic-pantry-spec.md
+    url: https://github.com/bluedrop-vantage/LightX/blob/main/exotic-pantry-spec.md
     about: Full 1.0 draft of the LightX product specification.
   - name: Read the architecture notes
-    url: https://github.com/ajayrambhia/LightX/blob/main/CLAUDE.md
+    url: https://github.com/bluedrop-vantage/LightX/blob/main/CLAUDE.md
     about: Overview of chokepoints, invariants, and where to find things.

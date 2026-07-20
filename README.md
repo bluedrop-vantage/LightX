@@ -2,8 +2,8 @@
 
 An interactive physics sandbox for faster-than-light constructs — warp bubbles, wormholes, Krasnikov tubes, hyperspace portals, and freely painted energy fields. The pedagogy is **honest physics wearing a fictional costume**: every construct is scored against the real equations of general relativity, and every fictional allowance ("suspend the null energy condition," "suspend chronology protection," "beyond confirmed physics") is explicit, logged, and cited.
 
-[![CI](https://github.com/ajayrambhia/LightX/actions/workflows/ci.yml/badge.svg)](https://github.com/ajayrambhia/LightX/actions/workflows/ci.yml)
-[![E2E](https://github.com/ajayrambhia/LightX/actions/workflows/e2e.yml/badge.svg)](https://github.com/ajayrambhia/LightX/actions/workflows/e2e.yml)
+[![CI](https://github.com/bluedrop-vantage/LightX/actions/workflows/ci.yml/badge.svg)](https://github.com/bluedrop-vantage/LightX/actions/workflows/ci.yml)
+[![E2E](https://github.com/bluedrop-vantage/LightX/actions/workflows/e2e.yml/badge.svg)](https://github.com/bluedrop-vantage/LightX/actions/workflows/e2e.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node ≥ 20](https://img.shields.io/badge/node-%E2%89%A520-brightgreen)](package.json)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)](tsconfig.json)
@@ -17,7 +17,7 @@ An interactive physics sandbox for faster-than-light constructs — warp bubbles
 Requires Node 20+ and npm 10+.
 
 ```bash
-git clone https://github.com/ajayrambhia/LightX.git
+git clone https://github.com/bluedrop-vantage/LightX.git
 cd LightX
 npm install
 npm run dev            # http://localhost:5173
