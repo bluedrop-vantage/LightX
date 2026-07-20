@@ -69,7 +69,18 @@ function classifyPlacements(placements: IngredientPlacement[]) {
 }
 
 function evaluateWarp(input: BuildVerdictInput, draft: Draft): void {
-  const slot = input.construct.kind === 'krasnikov' ? 'route' : 'bubbleWall';
+  const slot =
+    input.construct.kind === 'krasnikov'
+      ? 'route'
+      : input.construct.kind === 'custom'
+        ? 'field'
+        : 'bubbleWall';
+  const container =
+    input.construct.kind === 'krasnikov'
+      ? 'route'
+      : input.construct.kind === 'custom'
+        ? 'energy field'
+        : 'bubble wall';
   const wall = input.construct.placements.filter((p) => p.slot === slot);
   const cats = classifyPlacements(wall);
 
@@ -77,7 +88,7 @@ function evaluateWarp(input: BuildVerdictInput, draft: Draft): void {
     draft.level = 'incoherent';
     draft.headline = 'Ingredient cannot form a wall';
     const first = cats.unshapeable[0];
-    draft.reason = `${getIngredient(first.ingredient).displayName} is not a shapeable substance — it is a property of space (or bound to its apparatus). You cannot pour it into the bubble wall.`;
+    draft.reason = `${getIngredient(first.ingredient).displayName} is not a shapeable substance — it is a property of space (or bound to its apparatus). You cannot pour it into the ${container}.`;
     draft.necStatus = 'NA';
     return;
   }
@@ -85,8 +96,8 @@ function evaluateWarp(input: BuildVerdictInput, draft: Draft): void {
   if (cats.negativeShapeable.length === 0) {
     draft.level = 'incoherent';
     if (cats.positive.length === 0) {
-      draft.headline = 'Empty bubble wall';
-      draft.reason = 'A warp bubble needs a wall. Drop something into it.';
+      draft.headline = `Empty ${container}`;
+      draft.reason = `A ${container} needs something in it. Drop an ingredient.`;
     } else {
       draft.headline = 'You built a planet, not a drive';
       draft.reason =
@@ -111,7 +122,7 @@ function evaluateWarp(input: BuildVerdictInput, draft: Draft): void {
     draft,
     input,
     'energyCondition',
-    'Warp bubble wall requires negative energy density; NEC is violated by construction (Alcubierre 1994).',
+    `Sustained negative energy in the ${container} violates NEC by construction (Alcubierre 1994).`,
     'Alcubierre 1994',
     'geometry',
   );
@@ -119,8 +130,8 @@ function evaluateWarp(input: BuildVerdictInput, draft: Draft): void {
   if (draft.fordRomanRatio > 1) {
     if (!quantumInequalityActive) {
       draft.level = 'incoherent';
-      draft.headline = 'Quantum inequality forbids this bubble';
-      draft.reason = `The sustained negative energy density in the wall exceeds the Ford–Roman bound by a factor of ${draft.fordRomanRatio.toExponential(2)}. Enable "Suspend Quantum Inequalities" to build it anyway.`;
+      draft.headline = `Quantum inequality forbids this ${container}`;
+      draft.reason = `The sustained negative energy density in the ${container} exceeds the Ford–Roman bound by a factor of ${draft.fordRomanRatio.toExponential(2)}. Enable "Suspend Quantum Inequalities" to build it anyway.`;
       draft.citedTheorems.add('Ford–Roman 1995');
       return;
     }
@@ -128,7 +139,7 @@ function evaluateWarp(input: BuildVerdictInput, draft: Draft): void {
       draft,
       input,
       'quantumInequality',
-      `Ford–Roman ratio ${draft.fordRomanRatio.toExponential(2)}: this wall breaks the quantum-inequality bound.`,
+      `Ford–Roman ratio ${draft.fordRomanRatio.toExponential(2)}: this ${container} breaks the quantum-inequality bound.`,
       'Ford–Roman 1995',
       'user',
     );
@@ -143,10 +154,18 @@ function evaluateWarp(input: BuildVerdictInput, draft: Draft): void {
   }
 
   draft.level = 'worksWithSeals';
-  draft.headline = draft.headline || 'Bubble surfs — seals broken';
-  draft.reason =
-    draft.reason ||
-    'Metric well-formed; grid contracts ahead and expands behind. Interior is inertial (coffee stays in the cup).';
+  const defaultHeadline =
+    input.construct.kind === 'custom'
+      ? 'Custom rig holds together — seals broken'
+      : input.construct.kind === 'krasnikov'
+        ? 'Tube laid — seals broken'
+        : 'Bubble surfs — seals broken';
+  const defaultReason =
+    input.construct.kind === 'custom'
+      ? 'The painted / dropped negative-energy source shapes a coherent geometry. Fire rays or launch the ship to inspect it.'
+      : 'Metric well-formed; grid contracts ahead and expands behind. Interior is inertial (coffee stays in the cup).';
+  draft.headline = draft.headline || defaultHeadline;
+  draft.reason = draft.reason || defaultReason;
 }
 
 function evaluateWormhole(input: BuildVerdictInput, draft: Draft): void {

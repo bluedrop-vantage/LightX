@@ -99,6 +99,47 @@ describe('buildVerdict — wormhole', () => {
   });
 });
 
+describe('buildVerdict — custom / free-build', () => {
+  it('detects negative energy dropped into the field slot (not a bubbleWall)', () => {
+    const v = buildVerdict({
+      construct: {
+        kind: 'custom',
+        placements: [{ ingredient: 'negativeEnergy', amount: 1e30, slot: 'field' }],
+        parameters: { v_s: 1, wallThickness: 1 },
+      },
+      activeSeals: ['quantumInequality'],
+    });
+    expect(v.level).toBe('worksWithSeals');
+    expect(v.sealsBroken.some((s) => s.seal === 'energyCondition')).toBe(true);
+    expect(v.headline).not.toMatch(/empty/i);
+  });
+
+  it('accepts positive matter alone as an ordinary-physics build (mass well)', () => {
+    const v = buildVerdict({
+      construct: {
+        kind: 'custom',
+        placements: [{ ingredient: 'ordinary', amount: 1, slot: 'field' }],
+        parameters: { v_s: 1, wallThickness: 1 },
+      },
+      activeSeals: [],
+    });
+    expect(v.level).toBe('worksInReality');
+    expect(v.necStatus).toBe('PASS');
+  });
+
+  it('is worksInReality with no exotic ingredients (ordinary rocket)', () => {
+    const v = buildVerdict({
+      construct: {
+        kind: 'custom',
+        placements: [{ ingredient: 'antimatter', amount: 1, slot: 'field' }],
+        parameters: {},
+      },
+      activeSeals: [],
+    });
+    expect(v.level).toBe('worksInReality');
+  });
+});
+
 describe('Verdict invariant', () => {
   it('has __brand === "Verdict" (nominal typing)', () => {
     const v = buildVerdict({ construct: warp([]), activeSeals: [] });
